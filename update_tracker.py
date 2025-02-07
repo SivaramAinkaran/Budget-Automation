@@ -45,13 +45,11 @@ class NewSpending:
         
         self.spending_data = self.__monthly_spending()   
         
-        self.spending_data["source"] = "Spending"
         self.expenses_data["source"] = "Expenses"
         
-        new_spending_data = pd.concat([self.spending_data, self.expenses_data]).drop_duplicates(subset=["Expense", "$", "Date"],keep=False)
-        new_spending_data = new_spending_data[new_spending_data["source"] == "Spending"]
-        new_spending_data = new_spending_data.drop(columns=["source"])
-        
+        new_spending_data = pd.merge(self.spending_data, self.expenses_data, on=["Expense", "$", "Date"], how="outer")
+        new_spending_data = new_spending_data[new_spending_data["source"].isna()]
+        new_spending_data = new_spending_data.drop(columns=["source"])        
         new_spending_data.to_csv(self.output_path, index=False)
         os.startfile(self.output_path)
     
@@ -61,7 +59,6 @@ def refresh_database():
     else:
         current_year = datetime.now().year
         
-    # TODO remove reliance on explicit file path (Move to same folder?)
     expense_tracker_path = r"C:\Users\User\Documents\[03] Shortcuts\Finances\Budget"
     current_year_folder = os.path.join(expense_tracker_path, f"{current_year}-{current_year + 1}")
     os.startfile(os.path.join(current_year_folder, "1 2024-2025.xlsx"))
@@ -71,8 +68,7 @@ def refresh_database():
     ok_clicked = messagebox.askokcancel(title="Update Database?", message="Click ok once you have updated, saved and closed your budget to update the Database")
     if ok_clicked:
         update_database.update_database(current_year_folder)
-        # TODO remove reliance on explicit file path (Move to same folder?)
-        os.startfile(r"C:\Users\User\Documents\[03] Shortcuts\Finances\Budget\Powers BI\Expense Report.pbix")
+        os.startfile(r"C:\Users\User\Documents\[03] Shortcuts\Finances\Budget\Power BI\Expense Report.pbix")
     root.destroy()
     
     

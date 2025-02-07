@@ -2,6 +2,8 @@ import time
 import os
 
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import SessionNotCreatedException
+from selenium.common.exceptions import NoSuchElementException
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -36,8 +38,8 @@ class Browser:
         button.click()
         
         
-    def download_report_westpac(self, by: By, value: str):
-        self.open_page('https://banking.westpac.com.au/secure/banking/reportsandexports/exportparameters/2/') # this is to skip alot of unrequired clicks
+    def download_report_westpac(self):
+        self.open_page('https://banking.westpac.com.au/secure/banking/reportsandexports/exportparameters/2/')
         self.click_button(by=By.XPATH, value='//*[@id="form-displayreportdata"]/div[1]/fieldset[1]/div/div[3]/a')
         self.click_button(by=By.XPATH, value='//*[@id="form-displayreportdata"]/div[1]/fieldset[1]/div/div[3]/div/ol/li[4]/a')
         self.click_button(by=By.XPATH, value='//*[@id="form-displayreportdata"]/div[2]/button')
@@ -45,23 +47,23 @@ class Browser:
         
     def download_report_anz(self):
         self.click_button(by=By.XPATH, value='//*[@id="list-item-home-screen-list-display-0"]')
-        time.sleep(1) # Download button in transaction tab is always visible, so must input an explicit wait time to prevent a failed click
+        time.sleep(1)
         self.click_button(by=By.XPATH, value='//*[@id="Transactionstab"]/div')
         self.click_button(by=By.XPATH, value='//*[@id="search-download"]/button[2]')
+        self.click_button(by=By.XPATH, value='//*[@id="drop-down-search-transaction-account1-dropdown-field"]')
+        self.click_button(by=By.XPATH, value='//*[@id="row"]/div[1]/div/div/div[1]/ul/li')
         self.click_button(by=By.XPATH, value='//*[@id="drop-down-search-duration1-dropdown-field"]')
         self.click_button(by=By.XPATH, value='//*[@id="Durationpanel"]/div[2]/div/div/div[1]/ul/li[6]')
         self.click_button(by=By.XPATH, value='//*[@id="footer-primary-button"]') 
         time.sleep(2)
         
     def login_westpac(self, username: str, password: str):
-        # Can add user input through tk input box for more security
         self.add_input(by=By.XPATH, value='//*[@id="fakeusername"]', text=username)
         self.add_input(by=By.XPATH, value='//*[@id="password"]', text=password)
         self.click_button(by=By.XPATH, value='//*[@id="signin"]')
         self.download_report_westpac()
         
     def login_anz(self, username: str, password: str):
-        # Can add user input through tk input box for more security
         self.add_input(by=By.XPATH, value='//*[@id="customerRegistrationNumber"]', text=username)
         self.add_input(by=By.XPATH, value='//*[@id="password"]', text=password)
         self.click_button(by=By.XPATH, value='//*[@id="root"]/div/main/div/div/div[1]/div/div/form/div[2]/div/button')
@@ -88,6 +90,3 @@ def get_reports():
     
     return
 
-if __name__ == "__main__":
-    a = get_reports()
-    

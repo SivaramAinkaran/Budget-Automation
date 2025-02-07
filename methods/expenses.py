@@ -4,7 +4,7 @@ from tkinter import simpledialog
 from datetime import datetime, date
 
 class CurrentExpenses:
-    """Get all Expenses for the given month currently in budget
+    """Get all Expenses for the given month
     """
     
     def __init__(self):
@@ -130,9 +130,6 @@ class CurrentExpenses:
         
         
 
-
-if __name__ == "__main__":
-    print("hello")
         
         
         

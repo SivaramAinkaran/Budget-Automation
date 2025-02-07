@@ -3,8 +3,6 @@ from datetime import datetime
 import os
 
 class Spending:
-    """Get and clean all spending for the given month from Bank transaction statements
-    """
     def __init__(self, paths):
         """
         Args:
@@ -78,8 +76,3 @@ class Spending:
         
         return all_spending_data
         
-        
-        
-if __name__ == "__main__":
-    print("hello")
-    
